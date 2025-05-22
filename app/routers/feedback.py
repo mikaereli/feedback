@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, Path, HTTPException, status
+from fastapi import APIRouter, Depends, Path, HTTPException, status, Form
 
 
 from app.auth.dependecies import get_current_user
@@ -11,7 +11,7 @@ from app.models.user import User
 router = APIRouter(prefix="/feedback", tags=["Feedback"])
 
 @router.post("/", response_model=SFeedback)
-async def add_feedback(feedback_data: SFeedback, user: User = Depends(get_current_user)):
+async def add_feedback(feedback_data: SFeedback = Form(...), user: User = Depends(get_current_user)):
     if not feedback_data:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Feedback data is required")
     
