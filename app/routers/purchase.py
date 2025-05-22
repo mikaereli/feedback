@@ -11,8 +11,8 @@ router = APIRouter(prefix="/purchases", tags=["Purchases"])
 
 @router.post("/", response_model=SPurchase)
 async def purchase_product(purchase_data: SPurchaseCreate, current_user: User = Depends(get_current_user)):
-    # Check if product exists
     product = await ProductCrud.find_one_or_none(id=purchase_data.product_id)
+
     if not product:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
