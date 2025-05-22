@@ -18,22 +18,19 @@ async def purchase_product(purchase_data: SPurchaseCreate, current_user: User = 
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Product not found"
         )
-    
-    # Check if there's enough quantity available
+
     if product.get("amount", 0) < purchase_data.quantity:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Not enough product quantity available"
         )
-    
-    # Create the purchase
+
     purchase = await PurchaseCrud.add(
         user_id=current_user.id,
         product_id=purchase_data.product_id,
         quantity=purchase_data.quantity
     )
-    
-    # Update product quantity
+
     new_amount = product.get("amount", 0) - purchase_data.quantity
     await ProductCrud.update(id=purchase_data.product_id, amount=new_amount)
     
