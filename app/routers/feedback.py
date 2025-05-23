@@ -25,5 +25,5 @@ async def add_feedback(feedback_data: SFeedback = Form(...), user: User = Depend
     return feedback
 
 @router.get("/by_product/{product_id}", response_model=List[SFeedbackRead])
-async def get_feedbacks_by_product(product_id: int = Path(...)):
+async def get_feedbacks_by_product(product_id: int = Path(..., gt=0)):
     return await FeedbackCrud.find_all(product_id=product_id)
